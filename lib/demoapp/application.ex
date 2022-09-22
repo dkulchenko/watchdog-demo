@@ -8,8 +8,7 @@ defmodule Demoapp.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      Watchdog,
-      {Watchdog.Starter, Demoapp.TestServer}
+      {Watchdog, processes: [Demoapp.TestServer]},
       # Starts a worker by calling: Demoapp.Worker.start_link(arg)
       # {Demoapp.Worker, arg}
     ]

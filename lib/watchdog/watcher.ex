@@ -32,21 +32,18 @@ defmodule Watchdog.Watcher do
     if is_nil(child_spec) do
       {:noreply, new_state}
     else
-      check_if_replacement_already_monitored(state, pid, child_spec)
-      |> case do
-        true ->
-          Logger.info(
-            "received notification that process #{pretty_print_child_spec(child_spec)} has gone down, replacement already monitored"
-          )
+      if check_if_replacement_already_monitored(state, pid, child_spec) do
+        Logger.info(
+          "received notification that process #{pretty_print_child_spec(child_spec)} has gone down, replacement already monitored"
+        )
 
-          {:noreply, state}
+        {:noreply, state}
+      else
+        Logger.info(
+          "received notification that process #{pretty_print_child_spec(child_spec)} has gone down, attempting restart"
+        )
 
-        false ->
-          Logger.info(
-            "received notification that process #{pretty_print_child_spec(child_spec)} has gone down, attempting restart"
-          )
-
-          {:noreply, start_and_monitor(new_state, child_spec)}
+        {:noreply, start_and_monitor(new_state, child_spec)}
       end
     end
   end

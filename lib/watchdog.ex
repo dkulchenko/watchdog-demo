@@ -7,13 +7,14 @@ defmodule Watchdog do
   end
 
   @impl true
-  def init(_init_arg) do
-    children = [
-      Watchdog.Supervisor,
-      Watchdog.Watcher
-    ]
+  def init(processes: processes) when is_list(processes) do
+    children =
+      [
+        Watchdog.Supervisor,
+        Watchdog.Watcher
+      ] ++ Enum.map(processes, fn process -> {Watchdog.Starter, process} end)
 
-    Supervisor.init(children, strategy: :one_for_one)
+    Supervisor.init(children, strategy: :rest_for_one)
   end
 
   def start_child(%{} = child_spec) do

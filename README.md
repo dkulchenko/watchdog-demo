@@ -40,8 +40,7 @@ Now just add:
 
 ```elixir
 children = [
-  Watchdog,
-  {Watchdog.Starter, TestServer}
+  {Watchdog, processes: [TestServer]}
 ]
 ```
 
@@ -81,10 +80,7 @@ This is a proof-of-concept, not a published library (yet). Please feel free to t
 To use Watchdog, you just need `watchdog.ex` and the `watchdog` directory in `lib` from this repo, put into your app. Then add:
 
 ```
-Watchdog,
-{Watchdog.Starter, TestServer},
-{Watchdog.Starter, AnotherServer},
-{Watchdog.Starter, SomethingElse},
+{Watchdog, processes: [TestServer, AnotherServer]},
 ```
 
 to the children of your main supervisor. To write your GenServer, you just need the following:
